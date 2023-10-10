@@ -3,7 +3,7 @@ from pydantic import  ValidationError, TypeAdapter
 from typing import List
 
 from framework.schema import CreateOrder, GetOrdersInner
-from make_requests import Requesting
+from common.make_requests import Requesting
 from common.consts import URL, HTTP_METHOD
 
 
@@ -26,7 +26,6 @@ class Order:
 
             initialize_req = Requesting(base_url=URL.API_HOST.value)
             res = initialize_req.make_requests(method=HTTP_METHOD.POST.value,params=params, path=URL.CREATE_ORDER.value)
-
             mapping_dict = CreateOrder(**res)
 
             return mapping_dict
@@ -42,7 +41,7 @@ class Order:
             initialize_req = Requesting(base_url=URL.API_HOST.value)
             res = initialize_req.make_requests(method=HTTP_METHOD.GET.value, path=URL.GET_ORDERS.value)
 
-            # here need to map all list with data
+            # here need to mapping all list with data
             ta = TypeAdapter(List[GetOrdersInner])
             make = ta.validate_python(res)
 
@@ -52,6 +51,8 @@ class Order:
             print("e", e)
             return e
         except ValidationError as inval:
+            print("inval", inval)
             return inval
+
 
 
